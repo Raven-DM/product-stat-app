@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/productListFragment">
+
+    <fragment
+        android:id="@+id/productListFragment"
+        android:name="com.example.productanalyticsapp.fragments.ProductListFragment"
+        android:label="Produk" />
+
+    <fragment
+        android:id="@+id/productStatsFragment"
+        android:name="com.example.productanalyticsapp.fragments.ProductStatsFragment"
+        android:label="Statistik Produk" />
+
+    <fragment
+        android:id="@+id/ratingChartFragment"
+        android:name="com.example.productanalyticsapp.fragments.RatingChartFragment"
+        android:label="Grafik Rating" />
+
+    <fragment
+        android:id="@+id/brandFilterFragment"
+        android:name="com.example.productanalyticsapp.fragments.BrandFilterFragment"
+        android:label="Filter Brand" />
+
+    <fragment
+        android:id="@+id/wordFrequencyFragment"
+        android:name="com.example.productanalyticsapp.fragments.WordFrequencyFragment"
+        android:label="Analisis Kata" />
+
+    <fragment
+        android:id="@+id/trendingProductFragment"
+        android:name="com.example.productanalyticsapp.fragments.TrendingProductFragment"
+        android:label="Produk Trending" />
+
+    <fragment
+        android:id="@+id/productCompareFragment"
+        android:name="com.example.productanalyticsapp.fragments.ProductCompareFragment"
+        android:label="Bandingkan Produk" />
+
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.example.productanalyticsapp.fragments.ProductDetailFragment"
+        android:label="Detail Produk" />
+
+    <fragment
+        android:id="@+id/productSearchFragment"
+        android:name="com.example.productanalyticsapp.fragments.ProductSearchFragment"
+        android:label="Cari Produk" />
+</navigation>

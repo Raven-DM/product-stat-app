@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.productanalyticsapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Product Analytics"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ProductAnalyticsApp">
+
+        <!-- DashboardActivity sebagai activity utama (launcher) -->
+        <activity
+            android:name="com.example.productanalyticsapp.DashboardActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Jika punya aktivitas lain (misal: SplashActivity, LoginActivity), daftarkan di bawah ini -->
+        <!--
+        <activity android:name=".SplashActivity" />
+        <activity android:name=".LoginActivity" />
+        -->
+
+    </application>
+
+</manifest>

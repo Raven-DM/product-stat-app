@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/statsRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/textAvgRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rata-rata Rating: -"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/textMaxPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Harga Maksimum: -"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/textMinPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Harga Minimum: -"
+        android:textSize="18sp" />
+</LinearLayout>

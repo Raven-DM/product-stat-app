@@ -1,0 +1,22 @@
+<resources>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="app_name">Product Analytics</string>
+    <string name="menu_list">Product List</string>
+    <string name="menu_stats">Statistics</string>
+    <string name="menu_chart">Rating Chart</string>
+    <string name="menu_filter">Filter</string>
+    <string name="menu_compare">Compare</string>
+    <string name="produk">Produk</string>
+    <string name="cari">Cari</string>
+    <string name="statistic">Statistic</string>
+    <string name="banding">Banding</string>
+    <string name="filter">Filter</string>
+    <string name="product_name">Product Name</string>
+    <string name="rp123_456">Rp123.456</string>
+    <string name="_4_5">⭐ 4.5</string>
+    <string name="gagal_mencari_produk">Gagal mencari produk</string>
+    <string name="cari_produk">Cari produk...</string>
+    <string name="caricari">Cari</string>
+</resources>

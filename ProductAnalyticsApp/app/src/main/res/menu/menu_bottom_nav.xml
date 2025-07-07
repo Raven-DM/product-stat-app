@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/productListFragment"
+        android:icon="@drawable/ic_list"
+        android:title="@string/produk" />
+
+    <item
+        android:id="@+id/productSearchFragment"
+        android:icon="@drawable/ic_search"
+        android:title="@string/cari" />
+
+    <item
+        android:id="@+id/productStatsFragment"
+        android:icon="@drawable/ic_stats"
+        android:title="@string/statistic" />
+
+    <item
+        android:id="@+id/productCompareFragment"
+        android:icon="@drawable/ic_compare"
+        android:title="@string/banding" />
+
+    <item
+        android:id="@+id/brandFilterFragment"
+        android:icon="@drawable/ic_filter"
+        android:title="@string/filter" />
+
+</menu>
