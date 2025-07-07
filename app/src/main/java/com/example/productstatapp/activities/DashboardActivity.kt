@@ -1,13 +1,8 @@
 package com.example.productstatapp.activities
 
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-
 import androidx.appcompat.app.AppCompatActivity
 import com.example.productstatapp.R
-import com.example.productstatapp.fragments.BrandFilterFragment
 import com.example.productstatapp.fragments.ProductCompareFragment
 import com.example.productstatapp.fragments.ProductListFragment
 import com.example.productstatapp.fragments.ProductSearchFragment

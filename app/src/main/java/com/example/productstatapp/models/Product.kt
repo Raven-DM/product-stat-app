@@ -14,3 +14,9 @@ data class Product(
 data class ProductResponse(
     val products: List<Product>
 )
+
+data class Category(
+    val slug: String,
+    val name: String,
+    val url: String
+)

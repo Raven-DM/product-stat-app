@@ -1,5 +1,6 @@
 package com.example.productstatapp.network
 
+import com.example.productstatapp.models.Category
 import com.example.productstatapp.models.Product
 import com.example.productstatapp.models.ProductResponse
 import retrofit2.Response
@@ -16,6 +17,13 @@ interface ApiService {
 
     @GET("products/{id}")
     suspend fun getProductById(@Path("id") id: Int): Response<Product>
+
+    @GET("products/categories")
+    suspend fun getCategories(): Response<List<Category>>
+
+    @GET("products/category/{slug}")
+    suspend fun getProductsByCategory(@Path("slug") slug: String): Response<ProductResponse>
+
 }
 
 
