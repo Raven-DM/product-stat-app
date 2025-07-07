@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.productstatapp.R
 import com.example.productstatapp.adapters.ProductAdapter
 import com.example.productstatapp.databinding.FragmentProductListBinding
 import com.example.productstatapp.network.RetrofitClient
@@ -19,15 +20,19 @@ class ProductListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentProductListBinding.inflate(inflater, container, false)
-        adapter = ProductAdapter()
+        adapter = ProductAdapter { id ->
+            val fragment = ProductDetailFragment().apply {
+                arguments = Bundle().apply { putInt("id", id) }
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
-        Log.d("LIFECYCLE", "OnCreateViewProductlist")
-
         getProductList()
-
         return binding.root
-
     }
 
     private fun getProductList() {
@@ -35,14 +40,10 @@ class ProductListFragment : Fragment() {
             try {
                 val response = RetrofitClient.api.getProducts()
                 if (response.isSuccessful) {
-                    val list = response.body()?.products
-                    Log.d("API", "Jumlah produk: ${list?.size}")
-                    adapter.submitList(list)
-                } else {
-                    Log.e("API", "Gagal response: ${response.code()}")
+                    adapter.submitList(response.body()?.products)
                 }
             } catch (e: Exception) {
-                Log.e("API", "Error: ${e.localizedMessage}")
+                Log.e("API", "Error: ${e.message}", e)
             }
         }
     }

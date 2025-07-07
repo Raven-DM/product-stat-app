@@ -2,8 +2,22 @@
     android:orientation="vertical" android:padding="16dp"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <EditText android:id="@+id/etId1" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Product ID 1" inputType="number" />
-    <EditText android:id="@+id/etId2" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Product ID 2" inputType="number" />
-    <Button android:id="@+id/btnCompare" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Compare" />
-    <TextView android:id="@+id/tvCompareResult" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <TextView android:text="Compare Products" android:textSize="18sp"
+        android:textStyle="bold" android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+    <Spinner android:id="@+id/spinnerProduct1"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <Spinner android:id="@+id/spinnerProduct2"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="12dp" />
+
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <TextView android:id="@+id/tvResult" android:textSize="16sp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>
