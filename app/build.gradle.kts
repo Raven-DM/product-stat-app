@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
+    implementation("com.google.android.material:material:1.11.0")
     implementation(libs.play.services.analytics.impl)
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.androidx.navigation.fragment)
