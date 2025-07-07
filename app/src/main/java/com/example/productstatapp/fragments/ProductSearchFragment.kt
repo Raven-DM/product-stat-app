@@ -13,51 +13,62 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.productstatapp.R
 import com.example.productstatapp.adapters.ProductAdapter
 import com.example.productstatapp.databinding.FragmentProductSearchBinding
-import com.example.productstatapp.models.Category
 import com.example.productstatapp.models.Product
 import com.example.productstatapp.network.RetrofitClient
 import kotlinx.coroutines.launch
 
 class ProductSearchFragment : Fragment() {
-
     private lateinit var binding: FragmentProductSearchBinding
     private lateinit var adapter: ProductAdapter
     private var allProducts: List<Product> = emptyList()
     private var brandList: List<String> = listOf("All Brands")
-    private var categorySlugMap: Map<String, String> = mapOf()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentProductSearchBinding.inflate(inflater, container, false)
 
-        setupRecyclerView()
-        setupCategoryFilter()
-
-        binding.btnSearch.setOnClickListener {
-            val query = binding.etQuery.text.toString()
-            applyFilter(
-                brand = binding.spinnerBrand.selectedItem?.toString(),
-                query = query
-            )
-        }
-
-        return binding.root
-    }
-
-    private fun setupRecyclerView() {
         adapter = ProductAdapter { id ->
-            val detailFragment = ProductDetailFragment().apply {
+            val fragment = ProductDetailFragment().apply {
                 arguments = Bundle().apply { putInt("id", id) }
             }
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, detailFragment)
+                .replace(R.id.fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit()
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
+
+        setupCategoryFilter()
+
+        binding.btnSearch.setOnClickListener {
+            val q = binding.etQuery.text.toString()
+            search(q)
+        }
+
+        return binding.root
+    }
+
+    private fun setupBrandFilter(brands: List<String>) {
+        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, brands)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerBrand.adapter = spinnerAdapter
+
+        binding.spinnerBrand.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                applyFilter(
+                    brand = brands[position],
+                    query = binding.etQuery.text.toString(),
+                    category = binding.spinnerCategory.selectedItem.toString()
+                )
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
     }
 
     private fun setupCategoryFilter() {
@@ -65,20 +76,23 @@ class ProductSearchFragment : Fragment() {
             try {
                 val response = RetrofitClient.api.getCategories()
                 if (response.isSuccessful) {
-                    val categories = response.body() ?: emptyList()
+                    val categories = response.body() ?: listOf()
+                    val categoryNames = mutableListOf("All Categories")
+                    categoryNames.addAll(categories.map { it.name})
 
-                    val categoryNames = categories.map { it.name }
-                    categorySlugMap = categories.associate { it.name to it.slug }
-
-                    val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categoryNames)
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    binding.spinnerCategory.adapter = adapter
+                    val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categoryNames)
+                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    binding.spinnerCategory.adapter = spinnerAdapter
 
                     binding.spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                         override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                            val selectedName = categoryNames[position]
-                            val slug = categorySlugMap[selectedName] ?: return
-                            loadProductsByCategory(slug)
+                            val selectedCategory = categoryNames[position]
+                            if (selectedCategory == "All Categories") {
+                                val query = binding.etQuery.text.toString()
+                                search(query)
+                            } else {
+                                getProductsByCategory(selectedCategory)
+                            }
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -90,14 +104,13 @@ class ProductSearchFragment : Fragment() {
         }
     }
 
-    private fun loadProductsByCategory(slug: String) {
+    private fun search(query: String) {
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.api.getProductsByCategory(slug)
+                val response = RetrofitClient.api.searchProduct(query)
                 if (response.isSuccessful) {
                     allProducts = response.body()?.products ?: emptyList()
 
-                    // Update brand filter
                     val brands = allProducts.mapNotNull { it.brand }.toSet().sorted().toMutableList()
                     brands.add(0, "All Brands")
                     brandList = brands
@@ -105,40 +118,55 @@ class ProductSearchFragment : Fragment() {
 
                     applyFilter(
                         brand = binding.spinnerBrand.selectedItem?.toString(),
-                        query = binding.etQuery.text.toString()
+                        query = query,
+                        category = binding.spinnerCategory.selectedItem?.toString()
                     )
                 }
             } catch (e: Exception) {
-                Log.e("ProductFetch", "Failed to fetch products by category", e)
+                Log.e("SearchError", "Failed to search products", e)
             }
         }
     }
 
-    private fun setupBrandFilter(brands: List<String>) {
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, brands)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerBrand.adapter = adapter
+    private fun getProductsByCategory(categorySlug: String) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.api.getProductsByCategory(categorySlug)
+                if (response.isSuccessful) {
+                    allProducts = response.body()?.products ?: emptyList()
 
-        binding.spinnerBrand.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                applyFilter(
-                    brand = brands[position],
-                    query = binding.etQuery.text.toString()
-                )
+                    val brands = allProducts.mapNotNull { it.brand }.toSet().sorted().toMutableList()
+                    brands.add(0, "All Brands")
+                    brandList = brands
+                    setupBrandFilter(brandList)
+
+                    applyFilter(
+                        brand = binding.spinnerBrand.selectedItem?.toString(),
+                        query = binding.etQuery.text.toString(),
+                        category = categorySlug
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("CategoryProduct", "Failed to fetch products by category", e)
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
 
-    private fun applyFilter(brand: String?, query: String?) {
-        val safeBrand = brand ?: "All Brands"
+    private fun applyFilter(brand: String?, query: String?, category: String?) {
         val safeQuery = query ?: ""
+        val safeBrand = brand ?: "All Brands"
+        val safeCategory = category ?: "All Categories"
 
         val filtered = allProducts.filter { product ->
-            val titleMatch = product.title?.contains(safeQuery, ignoreCase = true) ?: false
-            val brandMatch = safeBrand == "All Brands" || product.brand?.contains(safeBrand, ignoreCase = true) == true
-            titleMatch && brandMatch
+            val title = product.title ?: ""
+            val prodBrand = product.brand ?: ""
+            val prodCategory = product.category ?: ""
+
+            val matchQuery = title.contains(safeQuery, ignoreCase = true)
+            val matchBrand = safeBrand == "All Brands" || prodBrand.contains(safeBrand, ignoreCase = true)
+            val matchCategory = safeCategory == "All Categories" || prodCategory.equals(safeCategory, ignoreCase = true)
+
+            matchQuery && matchBrand && matchCategory
         }
 
         adapter.submitList(filtered)
